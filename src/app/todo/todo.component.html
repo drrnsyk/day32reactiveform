@@ -1,0 +1,68 @@
+<h1>This is my reactive form example using form group and form array</h1>
+<h3>This is a TODO list form</h3>
+
+<form [formGroup]="todoForm" (ngSubmit)="submitForm()">
+    <table>
+        <tr>
+            <td>Name:</td>
+            <td>&nbsp;&nbsp;<input type="text" size="30" formControlName="name"></td>
+            <div *ngIf="todoForm.get('name')?.errors" class="invalid-feedback">
+                <div *ngIf="todoForm.get('name')?.hasError('required') && todoForm.dirty">
+                    error: name is required
+                </div>  
+            </div>
+        </tr>
+        <tr>
+            <td>Email:</td>
+            <td>&nbsp;&nbsp;<input type="text" size="30" formControlName="email"></td>
+            <div *ngIf="todoForm.get('email')?.errors" class="invalid-feedback">
+                <div *ngIf="todoForm.get('email')?.hasError('required') && todoForm.dirty">
+                    error: email is required
+                </div>  
+                <div *ngIf="todoForm.get('email')?.hasError('email')">
+                    error: please enter valid email
+                </div>
+            </div>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                &nbsp;
+                <button type="button" (click)="addTask()">Add task</button>
+            </td>
+        </tr>
+    </table>
+
+    <br>
+
+    <table *ngIf="taskArray.length > 0">
+        <thead>
+            <tr>
+                <th>Task</th>
+                <th>Priority</th>
+                <th>Due Date</th>
+            </tr>
+        </thead>
+        <tbody formArrayName="tasks">
+            <!-- ----- this part is 1 array ----- -->
+            <tr *ngFor="let tc of taskArray.controls; let i = index" [formGroupName]="i">
+                <td><input type="text" size="30" formControlName="task"></td>
+                <td>
+                    <select formControlName="priority">
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </td>
+                <td><input type="date" formControlName="dueDate"></td>
+                <td><button type="button" (click)="deleteTask(i)">Delete</button></td>
+            </tr>
+            <!-- ----- this part is 1 array ----- -->
+        </tbody>
+    </table>
+
+    <table>
+        <button type="submit" [disabled]="todoForm.invalid">Save TODO list</button>
+    </table>
+    
+</form>
